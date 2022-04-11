@@ -9,6 +9,7 @@ RUBRIC:
 Maya and Mariclare’s Virtual Yearbook!!
 
 
+
 Languages/Frameworks used (20 points)
 
 10 - Learned/Used React.js frontend
@@ -16,6 +17,7 @@ Languages/Frameworks used (20 points)
 0 - Learned/Used PHP backend
 
 10 - MongoDB Database
+
 
 
 Functionality (60 points)
@@ -38,10 +40,12 @@ Functionality (60 points)
 question, gain access to their email for contact.
 
 
+
 Best Practices (5 points)
 
 3 Code is readable and well formatted
 2 All pages pass the html validator
+
 
 
 Creative Portion (10 points)
