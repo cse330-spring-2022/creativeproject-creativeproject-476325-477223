@@ -4,6 +4,10 @@ Mariclare Gatter, 476325, mcgatter
 Maya Natesan, 477322, mayanatesannn
 
 
+Using this tutorial: https://www.mongodb.com/languages/mern-stack-tutorial
+
+
+
 RUBRIC:
    
 Maya and Mariclare’s Virtual Yearbook!!
