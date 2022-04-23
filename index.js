@@ -6,7 +6,7 @@ const app = express()
 //require('dotenv').config();
 //db.connectDB();
 app.use(express.json())
-app.use(express.static(path.join(__dirname,"client", "build")))
+app.use(express.static(path.join(__dirname,"react_files", "build")))
 //console.log(process.env.ATLAS_URI);
 
 // app.use((req, res, next) => {
