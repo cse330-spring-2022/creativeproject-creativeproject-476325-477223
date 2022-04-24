@@ -9,17 +9,13 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname,"react_files", "build")))
 //console.log(process.env.ATLAS_URI);
 
-// app.use((req, res, next) => {
-//     res.sendFile(path.join(__dirname, "creative_project", 'build', 'index.html'))
-    
-// })
-
+//waiting for a post request to register url
 app.post('/api/register', async (req, res) => {
     console.log(req.body)
-    await db.connectDB()
+    
     try {
-        data = {name: req.body.name, email: req.body.email, password: req.body.password}
-        db.addToDB(data)
+        data = {name: req.body.name, email: req.body.reg_email, password: req.body.reg_password}
+        await db.addToDB(data)
         res.json({status: 'ok'})
     } catch {
         res.json({status: 'error', error:'Did not add'})
@@ -31,8 +27,8 @@ app.post('/api/login', async (req, res) => {
     console.log(req.body)
 
     const user = await User.findOne({
-        email: req.body.email,
-        password: req.body.password,
+        email: req.body.login_email,
+        password: req.body.login_password,
     })
     if(user) {
         return res.json({status: 'ok', user: true})
@@ -42,14 +38,25 @@ app.post('/api/login', async (req, res) => {
 
 })
 
-async function start(){
-  await db.connectDB()
-//   let data = {hello:'maya'}
-//   await db.addToDB(data)
-}
+app.post('/api/post', async (req, res) => {
+    try{
+        console.log(req.body)
+        await db.addPost(req.body)
+        res.json({status: 'ok'})
+    } catch {
+        res.json({status: 'error', error:'Did not add'})
+    }
 
-(async () => {
-    await start()
-}) ()
+})
+
+app.post('/api/search_club', async (req, res) => {
+    try{
+        console.log(req.body)
+        const found_posts = await db.findClub(req.body)
+        res.json({found_posts: found_posts})
+    } catch{
+        res.json({status: 'error', error:'Search not completed'})
+    }
+})
 
 app.listen(process.env.PORT, () => {console.log('Server is running')})
