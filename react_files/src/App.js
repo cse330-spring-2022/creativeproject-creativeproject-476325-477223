@@ -34,6 +34,9 @@ function App() {
     //getting response from server
     const data = await response.json()
     console.log(data)
+    if(data.status='exists_error'){
+      alert('A user with that email already exists. Please try again.')
+    }
   }
 
     async function loginUser(event) {

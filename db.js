@@ -40,15 +40,18 @@ async function addToDB(data) {
 async function findUser(user_email){
 
     console.log("in find user")
+    console.log(user_email)
     const db = await connectDB('UserData')
 
     try {
-        let found_user = await db.find({email: user_email})
+        let found_user = await db.find({email: user_email}).toArray()
         console.log("found user")
-        console.log(found_user.toArray())
+        console.log(found_user)
         return found_user
     } catch(err) {
         console.log("could not find user")
+        let user_count = 0
+        return user_count
     }
 
 }

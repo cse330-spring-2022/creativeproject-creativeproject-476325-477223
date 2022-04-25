@@ -21,10 +21,17 @@ app.post('/api/register', async (req, res) => {
     
     try {
         data = {name: req.body.name, email: req.body.reg_email, password: req.body.reg_password}
-        await db.addToDB(data)
-        res.json({status: 'ok'})
+        const find = await db.findUser(req.body.reg_email)
+        if(find==0){
+            await db.addToDB(data)
+            res.json({status: 'ok'})
+            console.log("added user to database")
+        }
+        else{
+            res.json({status: 'exists_error', error:'User already exists!'})
+        }
     } catch {
-        res.json({status: 'error', error:'Did not add'})
+        res.json({status: 'add_error', error:'Did not add'})
     }
     
 })
@@ -36,7 +43,7 @@ app.post('/api/login', async (req, res) => {
     const user = await db.findUser(user_data.login_email)
 
     if(user) {
-        return res.json({status: 'ok', user: true})
+        return res.json({status: 'ok', user: true, user_info: user})
     } else {
         return res.json({status: 'error', user: false})
     }
