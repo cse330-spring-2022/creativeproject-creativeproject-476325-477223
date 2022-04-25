@@ -66,6 +66,16 @@ async function addPost(data) {
     
 }
 
+async function addToFavorites(data) {
+
+    const db = await connectDB('Favorites')
+
+    const result = await db.insertOne(data) //returns a promise
+    console.log(result)
+    return result
+    
+}
+
 async function findClub(data) {
 
     const db = await connectDB('Posts')
@@ -83,9 +93,5 @@ async function findClub(data) {
 
 }
 
-async function addToFavorites(login_email){
-
-}
-
-module.exports = { model, connectDB, addToDB, addPost, findClub, findUser}
+module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites}
 // module.exports = connectDB //exports the method, we can then import this script in another js file

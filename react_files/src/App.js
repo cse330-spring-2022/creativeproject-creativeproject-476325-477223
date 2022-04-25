@@ -7,6 +7,7 @@ import React from 'react';
 function App() {
 
   var posts = []
+  var username = ''
   const [name, setName] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
@@ -55,13 +56,37 @@ function App() {
       })
     })
 
-    const data = await response.json()
-    console.log(data)
+    const data = await response.json() //data contains user_info
+    const user_info = data.user_info
+    username = user_info[0].name
+    // console.log("did we get the name?")
+    // console.log(username)
+
   }
 
-  async function likeMessage(username){
+  async function favoritePost(post_title){
 
-    console.log(username)
+    console.log('in fav post')
+    console.log(post_title)
+
+    const response = await fetch('http://localhost:5000/api/favorite_post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        post_title
+      })
+    })
+
+    const favorites_info = await response.json()
+    console.log('WHAT THE FAVORITES JSON RETURNED')
+    console.log(favorites_info)
+
+  }
+
+  async function getCurrentUser(){
 
   }
 
@@ -103,7 +128,7 @@ function App() {
       heart_div.classList.add("button");
       const like_btn = document.createElement('input');
       like_btn.addEventListener('click', function(){
-        likeMessage(name)
+        favoritePost(post.title)
         // await db.addToFavorites(login_email)
       })
       like_btn.value = 'Add to Favorites!'; 

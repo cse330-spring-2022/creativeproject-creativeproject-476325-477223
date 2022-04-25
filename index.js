@@ -1,11 +1,17 @@
 const db = require('./db.js');
 const path = require('path')
 const express = require('express')
+var session = require('express-session');
 const app = express()
 
 //require('dotenv').config();
 //db.connectDB();
 app.use(express.json())
+app.use(session({
+    secret: 'super secret',
+    proxy: true,
+    resave: true,
+    saveUninitialized: true}));
 app.use(express.static(path.join(__dirname,"react_files", "build")))
 //console.log(process.env.ATLAS_URI);
 
@@ -39,10 +45,13 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
 
     let user_data = req.body
+    // console.log('SESSION USERNAME')
+    // console.log(req.session.username)
 
     const user = await db.findUser(user_data.login_email)
 
-    if(user) {
+    if(user!=0) {
+        req.session.username = user_data.login_email
         return res.json({status: 'ok', user: true, user_info: user})
     } else {
         return res.json({status: 'error', user: false})
@@ -66,6 +75,19 @@ app.post('/api/search_club', async (req, res) => {
         res.json({status: 'ok', found_posts: found_posts})
     } catch{
         res.json({status: 'error', error:'Search not completed'})
+    }
+})
+
+app.post('/api/favorite_post', async (req, res) => {
+
+    // console.log('TESTING FAV POST AND USERNAME')
+    post_title = req.body.post_title
+    current_user = req.session.username
+    try{
+        await db.addToFavorites({post_title: post_title, user: current_user})
+        res.json({status: 'ok', user: current_user, post_title: post_title})
+    } catch{
+        res.json({status: 'error', error:'Not able to favorite post'})
     }
 })
 
