@@ -37,6 +37,22 @@ async function addToDB(data) {
     
 }
 
+async function findUser(user_email){
+
+    console.log("in find user")
+    const db = await connectDB('UserData')
+
+    try {
+        let found_user = await db.find({email: user_email})
+        console.log("found user")
+        console.log(found_user.toArray())
+        return found_user
+    } catch(err) {
+        console.log("could not find user")
+    }
+
+}
+
 async function addPost(data) {
 
     const db = await connectDB('Posts')
@@ -64,5 +80,9 @@ async function findClub(data) {
 
 }
 
-module.exports = { model, connectDB, addToDB, addPost, findClub}
+async function addToFavorites(login_email){
+
+}
+
+module.exports = { model, connectDB, addToDB, addPost, findClub, findUser}
 // module.exports = connectDB //exports the method, we can then import this script in another js file

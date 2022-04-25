@@ -40,7 +40,7 @@ function App() {
     event.preventDefault()
 
     //sending login info to server
-    const response = await fetch('http://localhost:5000/api/register', {
+    const response = await fetch('http://localhost:5000/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,6 +54,12 @@ function App() {
 
     const data = await response.json()
     console.log(data)
+  }
+
+  async function likeMessage(username){
+
+    console.log(username)
+
   }
 
   async function searchClubTag(event){
@@ -84,14 +90,32 @@ function App() {
 
       const title = document.createElement("h3")
       const body = document.createElement('p')
+      const current_div = document.createElement('div')
+      current_div.id = 'individual_post'
       const node = document.createTextNode(post.title)
       const node1 = document.createTextNode(post.post_content)
+
+      const heart_div = document.createElement('div')
+      heart_div.id = 'like_button'
+      heart_div.classList.add("button");
+      const like_btn = document.createElement('input');
+      like_btn.addEventListener('click', function(){
+        likeMessage(name)
+        // await db.addToFavorites(login_email)
+      })
+      like_btn.value = 'Add to Favorites!'; 
+      like_btn.type = 'button'; 
+
       title.appendChild(node)
       body.appendChild(node1)
 
+      heart_div.append(like_btn)
+      current_div.appendChild(title)
+      current_div.appendChild(body)
+      current_div.append(heart_div)
+
       const element = document.getElementById("postDiv");
-      element.appendChild(title)
-      element.appendChild(body)
+      element.appendChild(current_div)
       
     });
 

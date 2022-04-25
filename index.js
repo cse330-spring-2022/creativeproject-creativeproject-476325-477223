@@ -30,12 +30,11 @@ app.post('/api/register', async (req, res) => {
 })
 
 app.post('/api/login', async (req, res) => {
-    console.log(req.body)
 
-    const user = await User.findOne({
-        email: req.body.login_email,
-        password: req.body.login_password,
-    })
+    let user_data = req.body
+
+    const user = await db.findUser(user_data.login_email)
+
     if(user) {
         return res.json({status: 'ok', user: true})
     } else {
@@ -46,7 +45,6 @@ app.post('/api/login', async (req, res) => {
 
 app.post('/api/post', async (req, res) => {
     try{
-        console.log(req.body)
         await db.addPost(req.body)
         res.json({status: 'ok', post: req.body})
     } catch {
@@ -57,11 +55,7 @@ app.post('/api/post', async (req, res) => {
 
 app.post('/api/search_club', async (req, res) => {
     try{
-        console.log('INDEX.JS')
-        console.log(req.body)
         const found_posts = await db.findClub(req.body)
-        console.log('we got find club back')
-        console.log(found_posts)
         res.json({status: 'ok', found_posts: found_posts})
     } catch{
         res.json({status: 'error', error:'Search not completed'})

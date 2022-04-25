@@ -54,6 +54,7 @@ function CreatePost(){
 
         const element = document.getElementById("postDiv");
         element.appendChild(current_div)
+
           
     }
     
