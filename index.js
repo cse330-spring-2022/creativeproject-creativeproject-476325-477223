@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname,"react_files", "build")))
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    res.send('hello world')
+    res.render('index')
 })
 
 //waiting for a post request to register url
@@ -48,7 +48,7 @@ app.post('/api/post', async (req, res) => {
     try{
         console.log(req.body)
         await db.addPost(req.body)
-        res.json({status: 'ok'})
+        res.json({status: 'ok', post: req.body})
     } catch {
         res.json({status: 'error', error:'Did not add'})
     }

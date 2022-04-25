@@ -2,6 +2,55 @@
   text-align: center;
 }
 
+#parent {
+  border: 1px solid black;
+  margin: 1rem;
+  padding: 2rem 2rem;
+  text-align: left;
+}
+#child {
+  display: inline-table;
+  padding: 1rem 1rem;
+  vertical-align: left;
+}
+#individual_post{
+  border: 1px solid black;
+  padding: 1rem 1rem;
+}
+#like_button{
+  text-align: right;
+}
+.button{
+  position: relative;
+  width: 50px;
+  height: 50px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-color: rgba(250,184,66, 1);
+}
+.button:before,
+.button:after{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  content: '';
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  background-color: rgba(250,184,66, 1);
+}
+.button:before{
+  bottom: 0px;
+  left: -25px;
+}
+.button:after{
+  top: -25px;
+  right: 0px;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

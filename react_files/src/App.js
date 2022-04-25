@@ -6,6 +6,7 @@ import React from 'react';
 
 function App() {
 
+  var posts = []
   const [name, setName] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
@@ -76,15 +77,31 @@ function App() {
     console.log("HELLO")
     console.log(found)
 
-    var posts = found.found_posts
-    return posts
+    posts = found.found_posts
+    document.getElementById("postDiv").innerHTML = ""
+
+    posts.forEach(post => {
+
+      const title = document.createElement("h3")
+      const body = document.createElement('p')
+      const node = document.createTextNode(post.title)
+      const node1 = document.createTextNode(post.post_content)
+      title.appendChild(node)
+      body.appendChild(node1)
+
+      const element = document.getElementById("postDiv");
+      element.appendChild(title)
+      element.appendChild(body)
+      
+    });
 
   }
 
   return (
-    <div>
+    <div id="parent">
 
-    <h1>Register</h1>
+    <div id='child'>
+    <h3>Register</h3>
     <form onSubmit={registerUser}>
 
       <input 
@@ -111,8 +128,10 @@ function App() {
       <input type='submit' value='Register' />
 
     </form>
+    </div>
 
-    <h1>Login</h1>
+    <div id='child'>
+    <h3>Login</h3>
     <form onSubmit={loginUser}>
       <input
       value={login_email} 
@@ -130,6 +149,7 @@ function App() {
       <br />
       <input type='submit' value='Login' />
     </form>
+    </div>
 
     <CreatePost></CreatePost>
 
@@ -144,6 +164,8 @@ function App() {
       <br />
       <input type='submit' value='Search' />
     </form>
+
+    <div id='postDiv'></div>
 
     </div>
   )
