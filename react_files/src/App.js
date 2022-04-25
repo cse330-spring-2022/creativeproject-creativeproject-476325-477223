@@ -81,6 +81,10 @@ function App() {
     })
 
     const favorites_info = await response.json()
+    if(favorites_info.error = 'not logged in'){
+      alert('Only logged in users can favorite posts!')
+    }
+
     console.log('WHAT THE FAVORITES JSON RETURNED')
     console.log(favorites_info)
 

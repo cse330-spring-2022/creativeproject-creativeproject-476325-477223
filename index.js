@@ -83,6 +83,11 @@ app.post('/api/favorite_post', async (req, res) => {
     // console.log('TESTING FAV POST AND USERNAME')
     post_title = req.body.post_title
     current_user = req.session.username
+
+    if(current_user==null){
+        res.json({status: 'error', error:'not logged in'})
+    }
+
     try{
         await db.addToFavorites({post_title: post_title, user: current_user})
         res.json({status: 'ok', user: current_user, post_title: post_title})
