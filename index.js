@@ -9,6 +9,12 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname,"react_files", "build")))
 //console.log(process.env.ATLAS_URI);
 
+app.set('view engine', 'ejs')
+
+app.get('/', (req, res) => {
+    res.send('hello world')
+})
+
 //waiting for a post request to register url
 app.post('/api/register', async (req, res) => {
     console.log(req.body)
@@ -51,9 +57,12 @@ app.post('/api/post', async (req, res) => {
 
 app.post('/api/search_club', async (req, res) => {
     try{
+        console.log('INDEX.JS')
         console.log(req.body)
         const found_posts = await db.findClub(req.body)
-        res.json({found_posts: found_posts})
+        console.log('we got find club back')
+        console.log(found_posts)
+        res.json({status: 'ok', found_posts: found_posts})
     } catch{
         res.json({status: 'error', error:'Search not completed'})
     }

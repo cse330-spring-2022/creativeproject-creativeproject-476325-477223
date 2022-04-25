@@ -48,11 +48,21 @@ async function addPost(data) {
 }
 
 async function findClub(data) {
+
     const db = await connectDB('Posts')
 
-    //search database and get only posts with certain club tag
-    //look for query method
+    let found_posts = await db.find({tagged_clubs: data.club_tag}).toArray()
+
+    console.log(found_posts)
+   
+    found_posts.forEach(element => {
+        console.log(element.title)
+        console.log(element.post_content)
+    }); 
+    
+    return found_posts
+
 }
 
-module.exports = { model, connectDB, addToDB, addPost}
+module.exports = { model, connectDB, addToDB, addPost, findClub}
 // module.exports = connectDB //exports the method, we can then import this script in another js file

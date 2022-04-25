@@ -1,9 +1,11 @@
 import {useState} from 'react'
 import './App.css';
 import CreatePost from './post.js';
+import React from 'react';
 
 
 function App() {
+
   const [name, setName] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
@@ -28,6 +30,7 @@ function App() {
       })
     })
 
+    //getting response from server
     const data = await response.json()
     console.log(data)
   }
@@ -53,7 +56,7 @@ function App() {
   }
 
   async function searchClubTag(event){
-    
+
     event.preventDefault()
 
     console.log(club_tag)
@@ -68,8 +71,13 @@ function App() {
       })
     })
 
-    const club_data = await response.json()
-    console.log(club_data)
+    const found = await response.json()
+
+    console.log("HELLO")
+    console.log(found)
+
+    var posts = found.found_posts
+    return posts
 
   }
 
@@ -139,6 +147,8 @@ function App() {
 
     </div>
   )
+
+
 }
 
 export default App;
