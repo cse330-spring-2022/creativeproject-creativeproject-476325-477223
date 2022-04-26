@@ -1,16 +1,16 @@
 
-import React from "react";
-import { Outlet } from "react-router-dom";
+// import React from "react";
+// import { Outlet } from "react-router-dom";
 
-function NewPost() {
-  return (
-    <div className="home">
-      <div class="container">
-        <h1 className="text-center mt-5">Blog page</h1>
-        <Outlet />
-      </div>
-    </div>
-  );
-}
+// function NewPost() {
+//   return (
+//     <div className="home">
+//       <div class="container">
+//         <h1 className="text-center mt-5">Blog page</h1>
+//         <Outlet />
+//       </div>
+//     </div>
+//   );
+// }
 
-export default NewPost;
+// export default NewPost;

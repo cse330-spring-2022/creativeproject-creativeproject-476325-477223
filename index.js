@@ -103,4 +103,20 @@ app.post('/api/favorite_post', async (req, res) => {
     }
 })
 
+app.post('/api/view_favorites', async (req, res) => {
+
+    console.log('in view favortes index.js')
+    console.log(req.body) // {view_favorites: view}
+
+    current_user = req.session.username
+
+    try{
+        const found_favorites = await db.findFavorites(current_user)
+        res.json({status: 'ok', found_favorites: found_favorites})
+    } catch{
+        res.json({status: 'error', error:'Favorites search not completed'})
+    }
+
+})
+
 app.listen(process.env.PORT, () => {console.log('Server is running')})

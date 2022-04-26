@@ -29,7 +29,7 @@ function CreatePost(){
         console.log(output)
         var post = output.post
         console.log(post)
-        
+
         const title = document.createElement("h3")
         const body = document.createElement('p')
         const current_div = document.createElement('div')
@@ -40,7 +40,10 @@ function CreatePost(){
         const heart_div = document.createElement('div')
         heart_div.id = 'like_button'
         heart_div.classList.add("button");
-        const like_btn = document.createElement('input'); 
+        const like_btn = document.createElement('input');
+        like_btn.addEventListener('click', function(){
+            favoritePost(post.title)
+        })
         like_btn.value = 'Add to Favorites!'; 
         like_btn.type = 'button'; 
 
@@ -55,8 +58,71 @@ function CreatePost(){
         const element = document.getElementById("postDiv");
         element.appendChild(current_div)
 
-          
     }
+
+    async function favoritePost(post_title){
+
+        console.log('in fav post')
+        console.log(post_title)
+    
+        const response = await fetch('http://localhost:5000/api/favorite_post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            post_title
+          })
+        })
+    
+        const favorites_info = await response.json()
+      
+        if(favorites_info.error == 'not logged in'){
+          alert('Only logged in users can favorite posts!')
+          return
+        }
+        
+          const see_favorites_btn = document.createElement('input');
+            see_favorites_btn.addEventListener('click', function(){
+              viewFavorites()
+            })
+            see_favorites_btn.value = 'View My Favorites!'; 
+            see_favorites_btn.type = 'button';
+    
+            const element = document.getElementById("fav_div");
+            element.appendChild(see_favorites_btn)
+    
+      }
+
+      async function viewFavorites(){
+        console.log('in view favorites')
+    
+        let view_favorites = 'view'
+    
+        const response = await fetch('http://localhost:5000/api/view_favorites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            view_favorites
+          })
+        })
+    
+        const found = await response.json()
+        console.log(found)
+    
+        let found_favorites = found.found_favorites
+    
+        found_favorites.forEach(favorite => {
+          console.log(favorite.post_title)
+        });
+    
+    
+    
+      }
     
     return(
     <div>

@@ -102,8 +102,33 @@ function App() {
 
   }
 
-  function viewFavorites(){
+  async function viewFavorites(){
     console.log('in view favorites')
+
+    let view_favorites = 'view'
+
+    const response = await fetch('http://localhost:5000/api/view_favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        view_favorites
+      })
+    })
+
+    const found = await response.json()
+    console.log(found)
+
+    let found_favorites = found.found_favorites
+
+    found_favorites.forEach(favorite => {
+      console.log(favorite.post_title)
+    });
+
+
+
   }
 
   async function searchClubTag(event){

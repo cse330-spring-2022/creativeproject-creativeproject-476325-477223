@@ -93,5 +93,15 @@ async function findClub(data) {
 
 }
 
-module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites}
+async function findFavorites(data) {
+
+    const db = await connectDB('Favorites')
+
+    let found_favorites = await db.find({user: current_user}).toArray()
+
+    return found_favorites
+
+}
+
+module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites}
 // module.exports = connectDB //exports the method, we can then import this script in another js file
