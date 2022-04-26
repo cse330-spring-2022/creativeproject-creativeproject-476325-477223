@@ -10,8 +10,15 @@
 }
 #child {
   display: inline-table;
-  padding: 1rem 1rem;
+  padding-right: 10px;
   vertical-align: left;
+}
+#text_box{
+  width: 60%;
+  height: 150px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  text-align: left;
 }
 #individual_post{
   outline: 1px solid black;

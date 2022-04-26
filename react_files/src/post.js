@@ -76,14 +76,14 @@ function CreatePost(){
       placeholder="tagged club" 
       />
     <br />
-    <input
+    <textarea id = 'text_box'
       value={post_content}
       onChange={(e) => setPostContent(e.target.value)}
       type="text" 
-      placeholder="body" 
+      placeholder="Share a Memory!" 
       />
       <br />
-      <input type='submit' value='Post' />
+        <input type='submit' value='Post' />
       </form>
     </div>
     )

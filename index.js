@@ -52,6 +52,8 @@ app.post('/api/login', async (req, res) => {
 
     if(user!=0) {
         req.session.username = user_data.login_email
+        // console.log("THIS IS THE NEW SET SESSION USERNAME")
+        // console.log(req.session.username)
         return res.json({status: 'ok', user: true, user_info: user})
     } else {
         return res.json({status: 'error', user: false})
@@ -80,16 +82,21 @@ app.post('/api/search_club', async (req, res) => {
 
 app.post('/api/favorite_post', async (req, res) => {
 
-    // console.log('TESTING FAV POST AND USERNAME')
+    console.log('In favorite post, server side')
     post_title = req.body.post_title
     current_user = req.session.username
 
-    if(current_user==null){
+    let checking_user = await db.findUser(current_user)
+    console.log(checking_user)
+
+    if(checking_user==0){
         res.json({status: 'error', error:'not logged in'})
+        return
     }
 
     try{
         await db.addToFavorites({post_title: post_title, user: current_user})
+        console.log("added to favories!")
         res.json({status: 'ok', user: current_user, post_title: post_title})
     } catch{
         res.json({status: 'error', error:'Not able to favorite post'})

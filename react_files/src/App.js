@@ -6,8 +6,8 @@ import React from 'react';
 
 function App() {
 
+  const username = ''
   var posts = []
-  var username = ''
   const [name, setName] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
@@ -57,8 +57,11 @@ function App() {
     })
 
     const data = await response.json() //data contains user_info
-    const user_info = data.user_info
-    username = user_info[0].name
+    console.log("GOT A RETURN")
+    console.log(data)
+    // console.log('logged in the user!')
+    // const user_info = data.user_info
+    // username = user_info[0].name
     // console.log("did we get the name?")
     // console.log(username)
 
@@ -81,17 +84,26 @@ function App() {
     })
 
     const favorites_info = await response.json()
-    if(favorites_info.error = 'not logged in'){
+  
+    if(favorites_info.error == 'not logged in'){
       alert('Only logged in users can favorite posts!')
+      return
     }
+    
+      const see_favorites_btn = document.createElement('input');
+        see_favorites_btn.addEventListener('click', function(){
+          viewFavorites()
+        })
+        see_favorites_btn.value = 'View My Favorites!'; 
+        see_favorites_btn.type = 'button';
 
-    console.log('WHAT THE FAVORITES JSON RETURNED')
-    console.log(favorites_info)
+        const element = document.getElementById("fav_div");
+        element.appendChild(see_favorites_btn)
 
   }
 
-  async function getCurrentUser(){
-
+  function viewFavorites(){
+    console.log('in view favorites')
   }
 
   async function searchClubTag(event){
@@ -207,9 +219,8 @@ function App() {
     </form>
     </div>
 
-    <CreatePost></CreatePost>
-
-    <h1>Search For Club Tag</h1>
+    <div id="child">
+    <h3>Search For Club Tag</h3>
     <form onSubmit={searchClubTag}>
       <input
       value={club_tag} 
@@ -220,6 +231,11 @@ function App() {
       <br />
       <input type='submit' value='Search' />
     </form>
+    </div>
+
+    <CreatePost></CreatePost>
+
+    <div id= 'fav_div'></div>
 
     <div id='postDiv'></div>
 
