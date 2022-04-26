@@ -66,6 +66,25 @@ async function addPost(data) {
     
 }
 
+async function findPost(post_title){
+
+    console.log("in find post (db.js)")
+    console.log(post_title)
+    const db = await connectDB('Posts')
+
+    let arr = await db.find({title: post_title}).toArray()
+
+    if(arr.length!=0){
+        let post_count = 1
+        return post_count
+    }
+        
+    console.log("no post with this title yet")
+    post_count = 0
+    return post_count
+
+}
+
 async function addToFavorites(data) {
 
     const db = await connectDB('Favorites')
@@ -103,5 +122,5 @@ async function findFavorites(data) {
 
 }
 
-module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites}
+module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites, findPost}
 // module.exports = connectDB //exports the method, we can then import this script in another js file

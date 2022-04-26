@@ -23,11 +23,14 @@ app.get('/', (req, res) => {
 
 //waiting for a post request to register url
 app.post('/api/register', async (req, res) => {
+
     console.log(req.body)
     
     try {
+
         data = {name: req.body.name, email: req.body.reg_email, password: req.body.reg_password}
         const find = await db.findUser(req.body.reg_email)
+
         if(find==0){
             await db.addToDB(data)
             res.json({status: 'ok'})
@@ -62,6 +65,17 @@ app.post('/api/login', async (req, res) => {
 })
 
 app.post('/api/post', async (req, res) => {
+
+    console.log('in post db server')
+    console.log(req.body.title)
+
+    let match_title = await db.findPost(req.body.title)
+
+    if(match_title!=0){
+        res.json({status: 'error', error: 'title exists'})
+        return
+    }
+
     try{
         await db.addPost(req.body)
         res.json({status: 'ok', post: req.body})
@@ -95,6 +109,7 @@ app.post('/api/favorite_post', async (req, res) => {
     }
 
     try{
+
         await db.addToFavorites({post_title: post_title, user: current_user})
         console.log("added to favories!")
         res.json({status: 'ok', user: current_user, post_title: post_title})

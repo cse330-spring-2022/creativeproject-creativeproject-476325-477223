@@ -25,6 +25,12 @@ function CreatePost(){
     })
 
         const output = await response.json()
+
+        if(output.error=='title exists'){
+            alert('A post with that title already exists. Please try a different one!')
+            return
+        }
+
         console.log('JSON response')
         console.log(output)
         var post = output.post
