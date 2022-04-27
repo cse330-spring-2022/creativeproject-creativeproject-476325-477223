@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 var {MongoClient} = require('mongodb');
@@ -16,10 +17,6 @@ const User = new mongoose.Schema({
 const model = mongoose.model('UserData', User)
 
 async function connectDB(collection){
-    try {
-        console.log('hi')
-        await client.connect()
-        console.log('hi again')
     
         return client.db().collection(collection)
     } catch(err) {
