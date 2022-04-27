@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import './App.css';
-import ReactDOMServer from 'react-dom/server'
 
 function CreatePost(){
     const [post_title, setPostTitle] = useState('')
@@ -8,7 +7,13 @@ function CreatePost(){
     const [tagged_clubs, setPostClubTag] = useState('')
 
     async function makeAPost(event) {
+
         event.preventDefault()
+
+        document.getElementById('post_title').value = ''
+        document.getElementById('tagged_clubs').value = ''
+        document.getElementById('text_box').value = ''
+
         const data = {title: post_title, post_content: post_content, tagged_clubs: tagged_clubs}
         console.log("in makeAPost")
         console.log(data)
@@ -27,7 +32,7 @@ function CreatePost(){
 
         const output = await response.json()
 
-        if(output.error=='title exists'){
+        if(output.error==='title exists'){
             alert('A post with that title already exists. Please try a different one!')
             return
         }
@@ -80,6 +85,10 @@ function CreatePost(){
 
     async function favoritePost(post_title){
 
+        document.getElementById('post_title').value = ''
+        document.getElementById('tagged_clubs').value = ''
+        document.getElementById('text_box').value = ''
+
         console.log('in fav post')
         console.log(post_title)
     
@@ -96,7 +105,7 @@ function CreatePost(){
     
         const favorites_info = await response.json()
       
-        if(favorites_info.error == 'not logged in'){
+        if(favorites_info.error === 'not logged in'){
           alert('Only logged in users can favorite posts!')
           return
         }
@@ -107,14 +116,14 @@ function CreatePost(){
     <div>
     <h3>Share a Memory!</h3>
     <form onSubmit={makeAPost}>
-    <input
+    <input id = 'post_title'
       value={post_title}
       onChange={(e) => setPostTitle(e.target.value)}
       type="text" 
       placeholder="title" 
       />
       <br />
-    <input
+    <input id='tagged_clubs'
       value={tagged_clubs}
       onChange={(e) => setPostClubTag(e.target.value)}
       type="text" 

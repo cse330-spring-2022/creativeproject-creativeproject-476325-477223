@@ -6,16 +6,24 @@ import React from 'react';
 
 function App() {
 
-  const username = ''
   var posts = []
+  const username = ''
+  let actual_answer;
+  let user_email;
   const [name, setName] = useState('')
+  const [security_question, setQuestion] = useState('')
+  const [security_answer, setAnswer] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
   const [login_email, getLoginEmail] = useState('')
   const [login_password, getLoginPassword] = useState('')
   const [club_tag, setClubTag] = useState('')
+  const [user_to_find, setUserToFind] = useState('')
+  const [guess, setGuess] = useState('')
+
 
   async function registerUser(event) {
+
     event.preventDefault()
 
     //sending registration info to server
@@ -33,14 +41,18 @@ function App() {
     })
 
     //getting response from server
-    const data = await response.json()
-    console.log(data)
-    if(data.status='exists_error'){
-      alert('A user with that email already exists. Please try again.')
-    }
+      const data = await response.json()
+      console.log(data)
+
+      if(data.status==='exists_error'){
+        alert('A user with that email already exists. Please try again.')
+        return
+      }
+
   }
 
     async function loginUser(event) {
+
       event.preventDefault()
 
       //sending login info to server
@@ -72,7 +84,61 @@ function App() {
           const element = document.getElementById("fav_div");
           element.appendChild(see_favorites_btn)
 
+      document.getElementById("login_email").value = ""
+      document.getElementById("login_password").value = ""
+
   }
+
+  async function logoutUser(event) {
+    event.preventDefault()
+   //sending login info to server
+    const response = await fetch('http://localhost:5000/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        username
+      })
+    })
+
+    const data = await response.json() //data contains user_info
+    console.log("GOT A RETURN")
+    console.log(data)
+
+    if(data.status == "ok") {
+      alert('Logged out successfully!')
+    }
+
+  }
+
+  async function deletePost(post_title){
+
+    console.log('in delete post')
+    console.log(post_title)
+
+    const response = await fetch('http://localhost:5000/api/delete_post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        post_title
+      })
+    })
+
+    const delete_info = await response.json()
+  
+    if(delete_info.error == 'not logged in'){
+      alert('Only logged in users can favorite posts!')
+      return
+    }
+    
+
+  }
+
 
   async function displayPosts(){
 
@@ -148,7 +214,7 @@ function App() {
 
     const favorites_info = await response.json()
   
-    if(favorites_info.error == 'not logged in'){
+    if(favorites_info.error === 'not logged in'){
       alert('Only logged in users can favorite posts!')
       return
     }
@@ -156,6 +222,7 @@ function App() {
   }
 
   async function viewFavorites(){
+
     console.log('in view favorites')
 
     let view_favorites = 'view'
@@ -213,7 +280,70 @@ function App() {
 
   }
 
+  async function searchUserEmail(event){
+
+    event.preventDefault()
+    
+    const response = await fetch('http://localhost:5000/api/search_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        user_to_find
+      })
+    })
+
+    const user_info = await response.json()
+
+    console.log("email")
+    actual_answer = user_info.user_info[0]['security_answer']
+    console.log(actual_answer)
+    user_email = user_info.user_info[0]['email']
+    console.log(user_email)
+    console.log(user_info.user_info[0]['security_question'])
+    alert(user_info.user_info[0]['security_question'])
+  
+
+
+  }
+
+  async function checkGuess(event){
+
+    event.preventDefault()
+    
+    const response = await fetch('http://localhost:5000/api/search_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        user_to_find
+      })
+    })
+
+    const user_info = await response.json()
+
+
+    console.log("email")
+    actual_answer = user_info.user_info[0]['security_answer']
+
+    user_email = user_info.user_info[0]['email']
+
+    if(guess == actual_answer) {
+      alert('Correct!' + " The user's email is " + user_email)
+
+    } else {
+      alert('Wrong!')
+    }
+
+
+  }
+
   async function editPost(){
+    
     console.log('in editPost method')
 
     let title = document.getElementById('edit_title').value
@@ -234,7 +364,7 @@ function App() {
     })
 
     const found = await response.json()
-    if(found.status=='ok'){
+    if(found.status==='ok'){
       document.getElementById('editPost').style.display = 'none'
 
     }
@@ -303,83 +433,135 @@ function App() {
   return (
     <div id="parent">
 
-    <div id='child'>
-    <h3>Register</h3>
-    <form onSubmit={registerUser}>
+        <h1>Maya and Mariclare's 330 Yearbook - Spring 2022</h1>
 
-      <input 
-      value={name} 
-      onChange={(e) => setName(e.target.value)} 
-      type="text" 
-      placeholder="Name" 
-      />
-      <br />
+      <div id='child'>
+      <h3>Register</h3>
+      <form onSubmit={registerUser}>
+
+        <input id='reg_name'
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+        type="text" 
+        placeholder="Name" 
+        />
+        <br />
+        <input id='reg_email'
+        value={reg_email} 
+        onChange={(e) => setEmail(e.target.value)}
+        type="text" 
+        placeholder="Email" 
+        />
+        <br />
+        <input id='reg_password'
+        value={reg_password} 
+        onChange={(e) => setPassword(e.target.value)}
+        type="password" 
+        placeholder="Password" 
+        />
+        <br />
+        <br />
+        <input 
+        value={security_question} 
+        onChange={(e) => setQuestion(e.target.value)}
+        type="question" 
+        placeholder="Security Question" 
+        />
+        <br />
+        <input 
+        value={security_answer} 
+        onChange={(e) => setAnswer(e.target.value)}
+        type="answer" 
+        placeholder="Answer" 
+        />
+        <br />
+        <input type='submit' value='Register' />
+
+      </form>
+      </div>
+
+      <div id='child'>
+      <h3>Login</h3>
+      <form onSubmit={loginUser}>
+        <input id='login_email'
+        value={login_email} 
+        onChange={(e) => getLoginEmail(e.target.value)}
+        type="text" 
+        placeholder="Email" 
+        />
+        <br />
+        <input id='login_password'
+        value={login_password} 
+        onChange={(e) => getLoginPassword(e.target.value)}
+        type="password" 
+        placeholder="Password" 
+        />
+        <br />
+        <input type='submit' value='Login' />
+      </form>
+      </div>
+
+      <div id="child">
+      <h3>Search For Club Tag</h3>
+      <form onSubmit={searchClubTag}>
+        <input
+        value={club_tag} 
+        onChange={(e) => setClubTag(e.target.value)}
+        type="text" 
+        placeholder="Club Tag" 
+        />
+        <br />
+        <input type='submit' value='Search' />
+      </form>
+      </div>
+      <div id="child">
+    <h3>Search For User Email</h3>
+    <form onSubmit={searchUserEmail}>
       <input
-      value={reg_email} 
-      onChange={(e) => setEmail(e.target.value)}
+      value={user_to_find} 
+      onChange={(e) => setUserToFind(e.target.value)}
       type="text" 
-      placeholder="Email" 
-      />
-      <br />
-      <input 
-      value={reg_password} 
-      onChange={(e) => setPassword(e.target.value)}
-      type="password" 
-      placeholder="Password" 
-      />
-      <br />
-      <input type='submit' value='Register' />
-
-    </form>
-    </div>
-
-    <div id='child'>
-    <h3>Login</h3>
-    <form onSubmit={loginUser}>
-      <input
-      value={login_email} 
-      onChange={(e) => getLoginEmail(e.target.value)}
-      type="text" 
-      placeholder="Email" 
-      />
-      <br />
-      <input 
-      value={login_password} 
-      onChange={(e) => getLoginPassword(e.target.value)}
-      type="password" 
-      placeholder="Password" 
-      />
-      <br />
-      <input type='submit' value='Login' />
-    </form>
-    </div>
-
-    <div id="child">
-    <h3>Search For Club Tag</h3>
-    <form onSubmit={searchClubTag}>
-      <input
-      value={club_tag} 
-      onChange={(e) => setClubTag(e.target.value)}
-      type="text" 
-      placeholder="Club Tag" 
+      placeholder="User" 
       />
       <br />
       <input type='submit' value='Search' />
     </form>
+    <form onSubmit={checkGuess}>
+      <input
+      value={guess} 
+      onChange={(e) => setGuess(e.target.value)}
+      type="text" 
+      placeholder="Answer to Security Question" 
+      />
+      <br />
+      <input type='submit' value='Submit' />
+    </form>
+    </div>
+        
+    <div id='child'>
+    <h3>Logout</h3>
+    <form onSubmit={logoutUser}>
+      <input type='submit' value='Logout' />
+    </form>
     </div>
 
-    <CreatePost></CreatePost>
+      <br/><br/>
+      <CreatePost></CreatePost>
 
-    <div id='editPost'>
-      <input id='edit_title' type='text'></input>
-      <input id='edit_body' type='text'></input>
-      <input id='original_title' type='hidden'></input>
-      <input id='edit_btn' onClick={editPost} type='submit' value='Edit Post'></input>
-    </div>
+      <input type="file" id="myFile" name="filename" />
+      <input type="submit" />
 
-    <div id= 'fav_div'></div>
 
-    <div id='postDiv'></div>
+      <div id='editPost'>
+        <input id='edit_title' type='text'></input>
+        <input id='edit_body' type='text'></input>
+        <input id='original_title' type='hidden'></input>
+        <input id='edit_btn' onClick={editPost} type='submit' value='Edit Post'></input>
+      </div>
+
+      <div id= 'fav_div'></div>
+      <div id= 'del_div'></div>
+      <div id='postDiv'></div>
 
     </div>
   )
