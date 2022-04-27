@@ -124,6 +124,20 @@ app.post('/api/favorite_post', async (req, res) => {
     }
 })
 
+app.post('/api/edit_post', async (req, res) => {
+
+    console.log('in edit post')
+    console.log(req.body)
+
+    try{
+        const edited_post = await db.editPost(req.body)
+        res.json({status: 'ok', edited_post: edited_post})
+    }catch{
+        res.json({status: 'error', error:'Edit not completed'})
+    }
+
+})
+
 app.post('/api/view_favorites', async (req, res) => {
 
     console.log('in view favortes index.js')
@@ -134,7 +148,8 @@ app.post('/api/view_favorites', async (req, res) => {
     try{
         const found_favorites = await db.findFavorites(current_user)
         res.json({status: 'ok', found_favorites: found_favorites})
-    } catch{
+    } catch(err){
+        console.log(err)
         res.json({status: 'error', error:'Favorites search not completed'})
     }
 

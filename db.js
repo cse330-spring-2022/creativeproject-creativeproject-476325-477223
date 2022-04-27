@@ -111,6 +111,24 @@ async function findClub(data) {
 
 }
 
+async function editPost(post_info) {
+
+    console.log(post_info)
+
+    const db = await connectDB('Posts')
+
+    const data = {$set: {title: post_info.title, post_content: post_info.body}}
+
+    console.log(data)
+
+    let editedPost = await db.updateOne({title: post_info.original_title}, data)
+
+    console.log(editedPost)
+
+    return editedPost
+
+}
+
 async function findFavorites(current_user) {
 
     const db = await connectDB('Favorites')
@@ -121,5 +139,5 @@ async function findFavorites(current_user) {
 
 }
 
-module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites, findPost}
+module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites, findPost, editPost}
 // module.exports = connectDB //exports the method, we can then import this script in another js file

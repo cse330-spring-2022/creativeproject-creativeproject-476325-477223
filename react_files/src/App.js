@@ -155,6 +155,33 @@ function App() {
 
   }
 
+  async function editPost(){
+    console.log('in editPost method')
+
+    let title = document.getElementById('edit_title').value
+    let body = document.getElementById('edit_body').value
+    let original_title = document.getElementById('original_title').value
+
+    const response = await fetch('http://localhost:5000/api/edit_post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        title,
+        body,
+        original_title
+      })
+    })
+
+    const found = await response.json()
+    if(found.status=='ok'){
+      document.getElementById('editPost').style.display = 'none'
+    }
+
+  }
+
   async function searchClubTag(event){
 
     event.preventDefault()
@@ -283,6 +310,13 @@ function App() {
     </div>
 
     <CreatePost></CreatePost>
+
+    <div id='editPost'>
+      <input id='edit_title' type='text'></input>
+      <input id='edit_body' type='text'></input>
+      <input id='original_title' type='hidden'></input>
+      <input id='edit_btn' onClick={editPost} type='submit' value='Edit Post'></input>
+    </div>
 
     <div id= 'fav_div'></div>
 

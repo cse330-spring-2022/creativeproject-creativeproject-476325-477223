@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import './App.css';
+import ReactDOMServer from 'react-dom/server'
 
 function CreatePost(){
     const [post_title, setPostTitle] = useState('')
@@ -53,15 +54,26 @@ function CreatePost(){
         like_btn.value = 'Add to Favorites!'; 
         like_btn.type = 'button'; 
 
+        const edit_btn = document.createElement('input');
+        edit_btn.addEventListener('click', function(){
+            document.getElementById('original_title').value = post.title
+            document.getElementById('edit_title').value = post.title
+            document.getElementById('edit_body').value = post.post_content
+            document.getElementById('editPost').style.display = 'block'
+        })
+        edit_btn.value = 'Edit'; 
+        edit_btn.type = 'button';
+
         title.appendChild(node)
         body.appendChild(node1)
 
         heart_div.append(like_btn)
+        heart_div.append(edit_btn)
         current_div.appendChild(title)
         current_div.appendChild(body)
         current_div.append(heart_div)
 
-        const element = document.getElementById("postDiv");
+        const element = document.getElementById("postDiv")
         element.appendChild(current_div)
 
     }
@@ -90,39 +102,10 @@ function CreatePost(){
         }
     
       }
-
-      async function viewFavorites(){
-        console.log('in view favorites')
-    
-        let view_favorites = 'view'
-    
-        const response = await fetch('http://localhost:5000/api/view_favorites', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            view_favorites
-          })
-        })
-    
-        const found = await response.json()
-        console.log(found)
-    
-        let found_favorites = found.found_favorites
-    
-        found_favorites.forEach(favorite => {
-          console.log(favorite.post_title)
-        });
-    
-    
-    
-      }
     
     return(
     <div>
-    <h1>Make a Post</h1>
+    <h3>Share a Memory!</h3>
     <form onSubmit={makeAPost}>
     <input
       value={post_title}

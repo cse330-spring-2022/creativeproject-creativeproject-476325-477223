@@ -31,6 +31,9 @@
 #like_button{
   text-align: right;
 }
+#editPost{
+  display: none;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
