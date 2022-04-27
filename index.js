@@ -108,11 +108,17 @@ app.post('/api/favorite_post', async (req, res) => {
         return
     }
 
+    let favorited_post = await db.findPost(post_title)
+    console.log('in index trying to find favorited post to get body')
+    console.log(favorited_post)
+
+    let post_body = favorited_post.post_content
+
     try{
 
-        await db.addToFavorites({post_title: post_title, user: current_user})
+        await db.addToFavorites({post_title: post_title, user: current_user, body: post_body})
         console.log("added to favories!")
-        res.json({status: 'ok', user: current_user, post_title: post_title})
+        res.json({status: 'ok', user: current_user, post_title: post_title, body: post_body})
     } catch{
         res.json({status: 'error', error:'Not able to favorite post'})
     }

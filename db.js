@@ -75,8 +75,7 @@ async function findPost(post_title){
     let arr = await db.find({title: post_title}).toArray()
 
     if(arr.length!=0){
-        let post_count = 1
-        return post_count
+        return arr[0]
     }
         
     console.log("no post with this title yet")
