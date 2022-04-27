@@ -70,6 +70,22 @@ function App() {
     const data = await response.json() //data contains user_info
     if(data.status == 'ok') {
       alert('Logged in successfully!')
+
+    displayPosts()
+
+    const see_favorites_btn = document.createElement('input');
+        see_favorites_btn.addEventListener('click', function(){
+          viewFavorites()
+        })
+        see_favorites_btn.value = 'View My Favorites!'; 
+        see_favorites_btn.type = 'button';
+
+        const element = document.getElementById("fav_div");
+        element.appendChild(see_favorites_btn)
+
+    document.getElementById("login_email").value = ""
+    document.getElementById("login_password").value = ""
+
     }
     // console.log("GOT A RETURN")
     // console.log(data)
@@ -128,16 +144,64 @@ function App() {
       alert('Only logged in users can favorite posts!')
       return
     }
-    
-    // const see_delete_btn = document.createElement('input');
-    //   see_delete_btn.addEventListener('click', function(){
-    //     viewFavorites()
-    //   })
-    //   see_delete_btn.value = 'View Delete!'; 
-    //   see_delete_btn.type = 'button';
 
-    //   const element = document.getElementById("del_div");
-    //   element.appendChild(see_delete_btn)
+    displayPosts()
+
+  }
+
+  async function displayPosts(){
+
+    let display = 'display'
+
+    console.log('in ap.js display posts')
+
+    const response = await fetch('http://localhost:5000/api/display_posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          display
+        })
+      })
+
+      console.log('back in display ap.js')
+      const found = await response.json()
+      console.log(found)
+
+      found.posts.forEach(post => {
+
+        const title = document.createElement("h3")
+        const body = document.createElement('p')
+        const current_div = document.createElement('div')
+        current_div.id = 'individual_post'
+        const node = document.createTextNode(post.title)
+        const node1 = document.createTextNode(post.post_content)
+
+        const heart_div = document.createElement('div')
+        heart_div.id = 'like_button'
+        heart_div.classList.add("button");
+        const like_btn = document.createElement('input');
+        like_btn.addEventListener('click', function(){
+          favoritePost(post.title)
+          // await db.addToFavorites(login_email)
+        })
+        like_btn.value = 'Add to Favorites!'; 
+        like_btn.type = 'button'; 
+
+        title.appendChild(node)
+        body.appendChild(node1)
+
+        heart_div.append(like_btn)
+        current_div.appendChild(title)
+        current_div.appendChild(body)
+        current_div.append(heart_div)
+
+        const element = document.getElementById("postDiv");
+        element.appendChild(current_div)
+          
+      });
 
   }
 
@@ -164,15 +228,15 @@ function App() {
       return
     }
     
-      const see_favorites_btn = document.createElement('input');
-        see_favorites_btn.addEventListener('click', function(){
-          viewFavorites()
-        })
-        see_favorites_btn.value = 'View My Favorites!'; 
-        see_favorites_btn.type = 'button';
+      // const see_favorites_btn = document.createElement('input');
+      //   see_favorites_btn.addEventListener('click', function(){
+      //     viewFavorites()
+      //   })
+      //   see_favorites_btn.value = 'View My Favorites!'; 
+      //   see_favorites_btn.type = 'button';
 
-        const element = document.getElementById("fav_div");
-        element.appendChild(see_favorites_btn)
+      //   const element = document.getElementById("fav_div");
+      //   element.appendChild(see_favorites_btn)
 
   }
 
@@ -197,9 +261,40 @@ function App() {
 
     let found_favorites = found.found_favorites
 
+    document.getElementById("postDiv").innerHTML = ""
+
     found_favorites.forEach(favorite => {
-      console.log(favorite.post_title)
-    });
+
+        const title = document.createElement("h3")
+        const body = document.createElement('p')
+        const current_div = document.createElement('div')
+        current_div.id = 'individual_post'
+        const node = document.createTextNode(favorite.post_title)
+        const node1 = document.createTextNode(favorite.body)
+
+        const heart_div = document.createElement('div')
+        heart_div.id = 'like_button'
+        heart_div.classList.add("button");
+        const like_btn = document.createElement('input');
+        like_btn.addEventListener('click', function(){
+          favoritePost(favorite.title)
+          // await db.addToFavorites(login_email)
+        })
+        like_btn.value = 'Add to Favorites!'; 
+        like_btn.type = 'button'; 
+
+        title.appendChild(node)
+        body.appendChild(node1)
+
+        heart_div.append(like_btn)
+        current_div.appendChild(title)
+        current_div.appendChild(body)
+        current_div.append(heart_div)
+
+        const element = document.getElementById("postDiv");
+        element.appendChild(current_div)
+        
+      });
 
 
 
@@ -221,7 +316,7 @@ function App() {
     })
 
     const user_info = await response.json()
-
+    console.log(user_info)
     console.log("email")
     actual_answer = user_info.user_info[0]['security_answer']
     console.log(actual_answer)
@@ -267,6 +362,34 @@ function App() {
 
   }
 
+  async function editPost(){
+    
+    console.log('in editPost method')
+
+    let title = document.getElementById('edit_title').value
+    let body = document.getElementById('edit_body').value
+    let original_title = document.getElementById('original_title').value
+
+    const response = await fetch('http://localhost:5000/api/edit_post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        title,
+        body,
+        original_title
+      })
+    })
+
+    const found = await response.json()
+    if(found.status==='ok'){
+      document.getElementById('editPost').style.display = 'none'
+
+    }
+
+  }
 
   async function searchClubTag(event){
 
@@ -329,6 +452,8 @@ function App() {
 
   return (
     <div id="parent">
+
+     <h1>Maya and Mariclare's 330 Yearbook - Spring 2022</h1>
 
     <div id='child'>
     <h3>Register</h3>
@@ -441,6 +566,13 @@ function App() {
     </div>
 
     <CreatePost></CreatePost>
+
+    <div id='editPost'>
+      <input id='edit_title' type='text'></input>
+      <input id='edit_body' type='text'></input>
+      <input id='original_title' type='hidden'></input>
+      <input id='edit_btn' onClick={editPost} type='submit' value='Edit Post'></input>
+    </div>
 
     <div id= 'fav_div'></div>
     <div id= 'del_div'></div>

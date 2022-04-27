@@ -25,6 +25,11 @@ function CreatePost(){
     })
 
         const output = await response.json()
+
+        if(output.error==='title exists'){
+            alert('A post with that title already exists. Please try a different one!')
+            return
+        }
         console.log('JSON response')
         console.log(output)
         var post = output.post
@@ -46,6 +51,16 @@ function CreatePost(){
         })
         like_btn.value = 'Add to Favorites!'; 
         like_btn.type = 'button'; 
+        
+        const edit_btn = document.createElement('input');
+        edit_btn.addEventListener('click', function(){
+            document.getElementById('original_title').value = post.title
+            document.getElementById('edit_title').value = post.title
+            document.getElementById('edit_body').value = post.post_content
+            document.getElementById('editPost').style.display = 'block'
+        })
+        edit_btn.value = 'Edit'; 
+        edit_btn.type = 'button';
 
         const delete_div = document.createElement('div')
         delete_div.id = 'delete_button'
@@ -60,7 +75,7 @@ function CreatePost(){
         title.appendChild(node)
         body.appendChild(node1)
 
-
+        heart_div.append(edit_btn)
         delete_div.append(delete_btn)
         heart_div.append(like_btn)
         current_div.appendChild(title)
@@ -111,6 +126,10 @@ function CreatePost(){
 
     async function favoritePost(post_title){
 
+        document.getElementById('post_title').value = ''
+        document.getElementById('tagged_clubs').value = ''
+        document.getElementById('text_box').value = ''
+
         console.log('in fav post')
         console.log(post_title)
     
@@ -132,46 +151,46 @@ function CreatePost(){
           return
         }
         
-          const see_favorites_btn = document.createElement('input');
-            see_favorites_btn.addEventListener('click', function(){
-              viewFavorites()
-            })
-            see_favorites_btn.value = 'View My Favorites!'; 
-            see_favorites_btn.type = 'button';
+          // const see_favorites_btn = document.createElement('input');
+          //   see_favorites_btn.addEventListener('click', function(){
+          //     viewFavorites()
+          //   })
+          //   see_favorites_btn.value = 'View My Favorites!'; 
+          //   see_favorites_btn.type = 'button';
     
-            const element = document.getElementById("fav_div");
-            element.appendChild(see_favorites_btn)
+          //   const element = document.getElementById("fav_div");
+          //   element.appendChild(see_favorites_btn)
     
       }
 
-      async function viewFavorites(){
-        console.log('in view favorites')
+      // async function viewFavorites(){
+      //   console.log('in view favorites')
     
-        let view_favorites = 'view'
+      //   let view_favorites = 'view'
     
-        const response = await fetch('http://localhost:5000/api/view_favorites', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            view_favorites
-          })
-        })
+      //   const response = await fetch('http://localhost:5000/api/view_favorites', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       'Accept': 'application/json'
+      //     },
+      //     body: JSON.stringify({
+      //       view_favorites
+      //     })
+      //   })
     
-        const found = await response.json()
-        console.log(found)
+      //   const found = await response.json()
+      //   console.log(found)
     
-        let found_favorites = found.found_favorites
+      //   let found_favorites = found.found_favorites
     
-        found_favorites.forEach(favorite => {
-          console.log(favorite.post_title)
-        });
+      //   found_favorites.forEach(favorite => {
+      //     console.log(favorite.post_title)
+      //   });
     
     
     
-      }
+      // }
     
     return(
     <div>

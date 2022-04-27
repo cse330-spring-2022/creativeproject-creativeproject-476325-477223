@@ -86,6 +86,17 @@ app.post('/api/logout', async (req, res) => {
 })
 
 app.post('/api/post', async (req, res) => {
+
+    console.log('in post db server')
+    console.log(req.body.title)
+
+    let match_title = await db.findPost(req.body.title)
+
+    if(match_title!=0){
+        res.json({status: 'error', error: 'title exists'})
+        return
+    }
+
     try{
         await db.addPost(req.body)
         res.json({status: 'ok', post: req.body})
@@ -128,10 +139,17 @@ app.post('/api/favorite_post', async (req, res) => {
         return
     }
 
+    let favorited_post = await db.findPost(post_title)
+    console.log('in index trying to find favorited post to get body')
+    console.log(favorited_post)
+
+    let post_body = favorited_post.post_content
+
     try{
-        await db.addToFavorites({post_title: post_title, user: current_user})
+
+        await db.addToFavorites({post_title: post_title, user: current_user, body: post_body})
         console.log("added to favories!")
-        res.json({status: 'ok', user: current_user, post_title: post_title})
+        res.json({status: 'ok', user: current_user, post_title: post_title, body: post_body})
     } catch{
         res.json({status: 'error', error:'Not able to favorite post'})
     }
@@ -147,7 +165,8 @@ app.post('/api/view_favorites', async (req, res) => {
     try{
         const found_favorites = await db.findFavorites(current_user)
         res.json({status: 'ok', found_favorites: found_favorites})
-    } catch{
+    } catch(err){
+        console.log(err)
         res.json({status: 'error', error:'Favorites search not completed'})
     }
 
@@ -174,6 +193,51 @@ app.post('/api/delete_post', async (req, res) => {
     } catch{
         res.json({status: 'error', error:'Not able to delete post'})
     }
+})
+
+app.post('/api/edit_post', async (req, res) => {
+
+    console.log('in edit post')
+    console.log(req.body)
+
+    try{
+        const edited_post = await db.editPost(req.body)
+        res.json({status: 'ok', edited_post: edited_post})
+    }catch{
+        res.json({status: 'error', error:'Edit not completed'})
+    }
+
+})
+
+app.post('/api/display_posts', async (req, res) => {
+
+    console.log('in display posts index.js')
+    console.log(req.body)
+
+    try{
+        const posts = await db.getPosts()
+        res.json({status: 'ok', posts: posts})
+    }catch{
+        res.json({status: 'error', error:'Post display not completed'})
+    }
+
+})
+
+app.post('/api/view_favorites', async (req, res) => {
+
+    console.log('in view favortes index.js')
+    console.log(req.body) // {view_favorites: view}
+
+    current_user = req.session.username
+
+    try{
+        const found_favorites = await db.findFavorites(current_user)
+        res.json({status: 'ok', found_favorites: found_favorites})
+    } catch(err){
+        console.log(err)
+        res.json({status: 'error', error:'Favorites search not completed'})
+    }
+
 })
 
 app.listen(process.env.PORT, () => {console.log('Server is running')})
