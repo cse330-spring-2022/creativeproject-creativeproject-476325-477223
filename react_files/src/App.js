@@ -1,3 +1,4 @@
+
 import {useState} from 'react'
 import './App.css';
 import CreatePost from './post.js';
@@ -7,13 +8,20 @@ import React from 'react';
 function App() {
 
   const username = ''
+  let actual_answer;
+  let user_email;
   var posts = []
+  
   const [name, setName] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
+  const [security_question, setQuestion] = useState('')
+  const [security_answer, setAnswer] = useState('')
   const [login_email, getLoginEmail] = useState('')
   const [login_password, getLoginPassword] = useState('')
   const [club_tag, setClubTag] = useState('')
+  const [user_to_find, setUserToFind] = useState('')
+  const [guess, setGuess] = useState('')
 
   async function registerUser(event) {
     event.preventDefault()
@@ -29,6 +37,8 @@ function App() {
         name,
         reg_email,
         reg_password,
+        security_question,
+        security_answer,
       })
     })
 
@@ -53,17 +63,81 @@ function App() {
       body: JSON.stringify({
         login_email,
         login_password,
+
+      })
+    })
+
+    const data = await response.json() //data contains user_info
+    if(data.status == 'ok') {
+      alert('Logged in successfully!')
+    }
+    // console.log("GOT A RETURN")
+    // console.log(data)
+    // console.log('logged in the user!')
+    // const user_info = data.user_info
+    // username = user_info[0].name
+    // console.log("did we get the name?")
+    // console.log(username)
+
+  }
+
+  async function logoutUser(event) {
+    event.preventDefault()
+   //sending login info to server
+    const response = await fetch('http://localhost:5000/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        username
       })
     })
 
     const data = await response.json() //data contains user_info
     console.log("GOT A RETURN")
     console.log(data)
-    // console.log('logged in the user!')
-    // const user_info = data.user_info
-    // username = user_info[0].name
-    // console.log("did we get the name?")
-    // console.log(username)
+
+    if(data.status == "ok") {
+      alert('Logged out successfully!')
+    }
+
+  }
+
+
+  async function deletePost(post_title){
+
+    console.log('in delete post')
+    console.log(post_title)
+
+    const response = await fetch('http://localhost:5000/api/delete_post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        post_title
+      })
+    })
+
+    const delete_info = await response.json()
+  
+    if(delete_info.error == 'not logged in'){
+      alert('Only logged in users can favorite posts!')
+      return
+    }
+    
+    // const see_delete_btn = document.createElement('input');
+    //   see_delete_btn.addEventListener('click', function(){
+    //     viewFavorites()
+    //   })
+    //   see_delete_btn.value = 'View Delete!'; 
+    //   see_delete_btn.type = 'button';
+
+    //   const element = document.getElementById("del_div");
+    //   element.appendChild(see_delete_btn)
 
   }
 
@@ -102,9 +176,97 @@ function App() {
 
   }
 
-  function viewFavorites(){
+  async function viewFavorites(){
     console.log('in view favorites')
+
+    let view_favorites = 'view'
+
+    const response = await fetch('http://localhost:5000/api/view_favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        view_favorites
+      })
+    })
+
+    const found = await response.json()
+    console.log(found)
+
+    let found_favorites = found.found_favorites
+
+    found_favorites.forEach(favorite => {
+      console.log(favorite.post_title)
+    });
+
+
+
   }
+
+   async function searchUserEmail(event){
+
+    event.preventDefault()
+    
+    const response = await fetch('http://localhost:5000/api/search_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        user_to_find
+      })
+    })
+
+    const user_info = await response.json()
+
+    console.log("email")
+    actual_answer = user_info.user_info[0]['security_answer']
+    console.log(actual_answer)
+    user_email = user_info.user_info[0]['email']
+    console.log(user_email)
+    console.log(user_info.user_info[0]['security_question'])
+    alert(user_info.user_info[0]['security_question'])
+  
+
+
+  }
+
+  async function checkGuess(event){
+
+    event.preventDefault()
+    
+    const response = await fetch('http://localhost:5000/api/search_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        user_to_find
+      })
+    })
+
+    const user_info = await response.json()
+
+
+    console.log("email")
+    actual_answer = user_info.user_info[0]['security_answer']
+
+    user_email = user_info.user_info[0]['email']
+
+    if(guess == actual_answer) {
+      alert('Correct!' + " The user's email is " + user_email)
+
+    } else {
+      alert('Wrong!')
+    }
+
+
+  }
+
 
   async function searchClubTag(event){
 
@@ -193,6 +355,20 @@ function App() {
       placeholder="Password" 
       />
       <br />
+      <input 
+      value={security_question} 
+      onChange={(e) => setQuestion(e.target.value)}
+      type="question" 
+      placeholder="Security Question" 
+      />
+      <br />
+      <input 
+      value={security_answer} 
+      onChange={(e) => setAnswer(e.target.value)}
+      type="answer" 
+      placeholder="Answer" 
+      />
+      <br />
       <input type='submit' value='Register' />
 
     </form>
@@ -233,13 +409,47 @@ function App() {
     </form>
     </div>
 
+    <div id="child">
+    <h3>Search For User Email</h3>
+    <form onSubmit={searchUserEmail}>
+      <input
+      value={user_to_find} 
+      onChange={(e) => setUserToFind(e.target.value)}
+      type="text" 
+      placeholder="User" 
+      />
+      <br />
+      <input type='submit' value='Search' />
+    </form>
+    <form onSubmit={checkGuess}>
+      <input
+      value={guess} 
+      onChange={(e) => setGuess(e.target.value)}
+      type="text" 
+      placeholder="Answer to Security Question" 
+      />
+      <br />
+      <input type='submit' value='Submit' />
+    </form>
+    </div>
+        
+    <div id='child'>
+    <h3>Logout</h3>
+    <form onSubmit={logoutUser}>
+      <input type='submit' value='Logout' />
+    </form>
+    </div>
+
     <CreatePost></CreatePost>
 
     <div id= 'fav_div'></div>
-
+    <div id= 'del_div'></div>
     <div id='postDiv'></div>
 
     </div>
+
+
+
   )
 
 

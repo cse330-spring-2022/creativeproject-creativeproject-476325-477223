@@ -3,12 +3,15 @@ const Schema = mongoose.Schema;
 var {MongoClient} = require('mongodb');
 require('dotenv').config();
 const client = new MongoClient(process.env.ATLAS_URI);
+var mongodb = require("mongodb");
 
 const User = new mongoose.Schema({
     name: {type: String, required:true},
     email: {type: String, required:true},
     password: {type: String, required:true},
     quote: {type: String},
+    security_question: {type: String},
+    security_answer: {type: String}
     },
     {collection: 'user-data'}
 )
@@ -47,12 +50,24 @@ async function findUser(user_email){
         let found_user = await db.find({email: user_email}).toArray()
         console.log("found user (user email below)")
         console.log(found_user)
+        console.log('in found user')
         return found_user
     } catch(err) {
         console.log("could not find user")
         let user_count = 0
         return user_count
     }
+
+}
+
+async function findUserSecurityInfo(data) {
+
+    console.log('in security ingo')
+    const db = await connectDB('UserData')
+
+    let found_user_info = await db.find({name: data.user_to_find}).toArray()
+
+    return found_user_info
 
 }
 
@@ -64,6 +79,31 @@ async function addPost(data) {
     console.log(result)
     return result
     
+}
+
+async function deletePost(post_title) {
+    //takes in post title
+    //find id associated with post title
+    console.log(post_title)
+    const db_posts = await connectDB('Posts')
+    try {
+        var post = await db_posts.findOne({title: post_title})
+        console.log("found post (id below)")
+        console.log(post)
+        console.log(post._id.valueOf())
+
+        console.log('in deletePost')
+        id = post._id.valueOf()
+        const result = await db_posts.deleteOne({ _id : new mongodb.ObjectId(id)}) //returns a promise
+        console.log(result)
+        
+        return result
+
+    } catch(err) {
+        console.log("could not find post")
+
+    }
+   
 }
 
 async function addToFavorites(data) {
@@ -93,5 +133,5 @@ async function findClub(data) {
 
 }
 
-module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites}
+module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, deletePost, findUserSecurityInfo}
 // module.exports = connectDB //exports the method, we can then import this script in another js file

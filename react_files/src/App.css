@@ -28,6 +28,11 @@
 #like_button{
   text-align: right;
 }
+
+#delete_button{
+  text-align: right;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
