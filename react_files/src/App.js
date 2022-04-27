@@ -99,17 +99,7 @@ function App() {
         const element = document.getElementById("fav_div");
         element.appendChild(see_favorites_btn)
 
-    // document.getElementById("login_email").value = ""
-    // document.getElementById("login_password").value = ""
-
     }
-    // console.log("GOT A RETURN")
-    // console.log(data)
-    // console.log('logged in the user!')
-    // const user_info = data.user_info
-    // username = user_info[0].name
-    // console.log("did we get the name?")
-    // console.log(username)
 
   }
 

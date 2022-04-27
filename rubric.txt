@@ -17,7 +17,6 @@ Functionality (60 points)
 Alert users who are already registered when they try to register, Alert users who try to post a story with a title that exists
 10 Users can upload, edit, and delete posts, posts include: stories/memories/quotes
 5 Logged in users can upload/edit/delete comments on posts
-**5 Logged in users can like posts and comments (had this repeated!! Taking out!!)**
 10 Logged in users can tag clubs and/or people in posts, those posts are then related in the database
 5 Logged in users can search posts by tag and view all posts associated with that tag
 5 Users can select favorite posts
