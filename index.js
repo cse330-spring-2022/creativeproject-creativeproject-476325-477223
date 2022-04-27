@@ -138,6 +138,20 @@ app.post('/api/edit_post', async (req, res) => {
 
 })
 
+app.post('/api/display_posts', async (req, res) => {
+
+    console.log('in display posts index.js')
+    console.log(req.body)
+
+    try{
+        const posts = await db.getPosts()
+        res.json({status: 'ok', posts: posts})
+    }catch{
+        res.json({status: 'error', error:'Post display not completed'})
+    }
+
+})
+
 app.post('/api/view_favorites', async (req, res) => {
 
     console.log('in view favortes index.js')

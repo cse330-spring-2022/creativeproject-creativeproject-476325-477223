@@ -41,34 +41,92 @@ function App() {
   }
 
     async function loginUser(event) {
-    event.preventDefault()
+      event.preventDefault()
 
-    //sending login info to server
-    const response = await fetch('http://localhost:5000/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        login_email,
-        login_password,
-      })
-    })
-
-    const data = await response.json() //data contains user_info
-    console.log("GOT A RETURN")
-    console.log(data)
-
-    const see_favorites_btn = document.createElement('input');
-        see_favorites_btn.addEventListener('click', function(){
-          viewFavorites()
+      //sending login info to server
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          login_email,
+          login_password,
         })
-        see_favorites_btn.value = 'View My Favorites!'; 
-        see_favorites_btn.type = 'button';
+      })
 
-        const element = document.getElementById("fav_div");
-        element.appendChild(see_favorites_btn)
+      const data = await response.json() //data contains user_info
+      console.log("GOT A RETURN")
+      console.log(data)
+
+      displayPosts()
+
+      const see_favorites_btn = document.createElement('input');
+          see_favorites_btn.addEventListener('click', function(){
+            viewFavorites()
+          })
+          see_favorites_btn.value = 'View My Favorites!'; 
+          see_favorites_btn.type = 'button';
+
+          const element = document.getElementById("fav_div");
+          element.appendChild(see_favorites_btn)
+
+  }
+
+  async function displayPosts(){
+
+    let display = 'display'
+
+    console.log('in ap.js display posts')
+
+    const response = await fetch('http://localhost:5000/api/display_posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          display
+        })
+      })
+
+      console.log('back in display ap.js')
+      const found = await response.json()
+      console.log(found)
+
+      found.posts.forEach(post => {
+
+        const title = document.createElement("h3")
+        const body = document.createElement('p')
+        const current_div = document.createElement('div')
+        current_div.id = 'individual_post'
+        const node = document.createTextNode(post.title)
+        const node1 = document.createTextNode(post.post_content)
+
+        const heart_div = document.createElement('div')
+        heart_div.id = 'like_button'
+        heart_div.classList.add("button");
+        const like_btn = document.createElement('input');
+        like_btn.addEventListener('click', function(){
+          favoritePost(post.title)
+          // await db.addToFavorites(login_email)
+        })
+        like_btn.value = 'Add to Favorites!'; 
+        like_btn.type = 'button'; 
+
+        title.appendChild(node)
+        body.appendChild(node1)
+
+        heart_div.append(like_btn)
+        current_div.appendChild(title)
+        current_div.appendChild(body)
+        current_div.append(heart_div)
+
+        const element = document.getElementById("postDiv");
+        element.appendChild(current_div)
+          
+      });
 
   }
 
@@ -126,7 +184,7 @@ function App() {
         const body = document.createElement('p')
         const current_div = document.createElement('div')
         current_div.id = 'individual_post'
-        const node = document.createTextNode(favorite.title)
+        const node = document.createTextNode(favorite.post_title)
         const node1 = document.createTextNode(favorite.body)
 
         const heart_div = document.createElement('div')
@@ -178,6 +236,7 @@ function App() {
     const found = await response.json()
     if(found.status=='ok'){
       document.getElementById('editPost').style.display = 'none'
+
     }
 
   }

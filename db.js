@@ -27,6 +27,18 @@ async function connectDB(collection){
     }
 }
 
+async function getPosts() {
+
+    console.log('in get posts db.js')
+
+    const db = await connectDB('Posts')
+
+    const result = await db.find().toArray() //returns a promise
+    console.log(result)
+    return result
+    
+}
+
 async function addToDB(data) {
 
     const db = await connectDB('UserData')
@@ -139,5 +151,5 @@ async function findFavorites(current_user) {
 
 }
 
-module.exports = { model, connectDB, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites, findPost, editPost}
+module.exports = { model, connectDB, getPosts, addToDB, addPost, findClub, findUser, addToFavorites, findFavorites, findPost, editPost}
 // module.exports = connectDB //exports the method, we can then import this script in another js file
