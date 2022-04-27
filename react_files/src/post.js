@@ -88,16 +88,6 @@ function CreatePost(){
           alert('Only logged in users can favorite posts!')
           return
         }
-        
-          const see_favorites_btn = document.createElement('input');
-            see_favorites_btn.addEventListener('click', function(){
-              viewFavorites()
-            })
-            see_favorites_btn.value = 'View My Favorites!'; 
-            see_favorites_btn.type = 'button';
-    
-            const element = document.getElementById("fav_div");
-            element.appendChild(see_favorites_btn)
     
       }
 

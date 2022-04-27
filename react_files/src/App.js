@@ -59,11 +59,16 @@ function App() {
     const data = await response.json() //data contains user_info
     console.log("GOT A RETURN")
     console.log(data)
-    // console.log('logged in the user!')
-    // const user_info = data.user_info
-    // username = user_info[0].name
-    // console.log("did we get the name?")
-    // console.log(username)
+
+    const see_favorites_btn = document.createElement('input');
+        see_favorites_btn.addEventListener('click', function(){
+          viewFavorites()
+        })
+        see_favorites_btn.value = 'View My Favorites!'; 
+        see_favorites_btn.type = 'button';
+
+        const element = document.getElementById("fav_div");
+        element.appendChild(see_favorites_btn)
 
   }
 
@@ -89,16 +94,6 @@ function App() {
       alert('Only logged in users can favorite posts!')
       return
     }
-    
-      const see_favorites_btn = document.createElement('input');
-        see_favorites_btn.addEventListener('click', function(){
-          viewFavorites()
-        })
-        see_favorites_btn.value = 'View My Favorites!'; 
-        see_favorites_btn.type = 'button';
-
-        const element = document.getElementById("fav_div");
-        element.appendChild(see_favorites_btn)
 
   }
 
@@ -123,11 +118,40 @@ function App() {
 
     let found_favorites = found.found_favorites
 
-    found_favorites.forEach(favorite => {
-      console.log(favorite.post_title)
-    });
+    document.getElementById("postDiv").innerHTML = ""
 
+      found_favorites.forEach(favorite => {
 
+        const title = document.createElement("h3")
+        const body = document.createElement('p')
+        const current_div = document.createElement('div')
+        current_div.id = 'individual_post'
+        const node = document.createTextNode(favorite.title)
+        const node1 = document.createTextNode(favorite.body)
+
+        const heart_div = document.createElement('div')
+        heart_div.id = 'like_button'
+        heart_div.classList.add("button");
+        const like_btn = document.createElement('input');
+        like_btn.addEventListener('click', function(){
+          favoritePost(favorite.title)
+          // await db.addToFavorites(login_email)
+        })
+        like_btn.value = 'Add to Favorites!'; 
+        like_btn.type = 'button'; 
+
+        title.appendChild(node)
+        body.appendChild(node1)
+
+        heart_div.append(like_btn)
+        current_div.appendChild(title)
+        current_div.appendChild(body)
+        current_div.append(heart_div)
+
+        const element = document.getElementById("postDiv");
+        element.appendChild(current_div)
+        
+      });
 
   }
 

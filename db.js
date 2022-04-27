@@ -111,7 +111,7 @@ async function findClub(data) {
 
 }
 
-async function findFavorites(data) {
+async function findFavorites(current_user) {
 
     const db = await connectDB('Favorites')
 
