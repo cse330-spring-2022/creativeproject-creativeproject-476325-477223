@@ -3,6 +3,23 @@ import {useState} from 'react'
 import './App.css';
 import CreatePost from './post.js';
 import React from 'react';
+import {Transition, CSSTransition, SwitchTransition, TransitionGroup} from "react-transition-group";
+
+const duration = 300;
+const defaultStyle = {
+  transition: `opacity ${duration}ms ease-in-out`,
+  opacity: 0,
+  padding: 20,
+  display: "inline-block",
+  backgroundColor: "#b3d0ff"
+};
+const transitionStyles = {
+  entering: { opacity: 0 },
+  entered: { opacity: 1 },
+  exiting: { opacity: 1 },
+  exited: { opacity: 0 },
+};
+
 
 
 function App() {
@@ -11,7 +28,8 @@ function App() {
   let actual_answer;
   let user_email;
   var posts = []
-  
+
+  const [inProp, setInProp] = useState(false);
   const [name, setName] = useState('')
   const [reg_email, setEmail] = useState('')
   const [reg_password, setPassword] = useState('')
@@ -454,6 +472,22 @@ function App() {
     <div id="parent">
 
      <h1>Maya and Mariclare's 330 Yearbook - Spring 2022</h1>
+      <div id = 'animated'>
+      <button onClick={() => setInProp(!inProp)}>View Details about Website</button>
+      <Transition in={inProp} timeout={300}>
+        {(state) => (
+          <div
+            style={{
+              ...defaultStyle,
+              ...transitionStyles[state]
+            }}
+          >
+            Hi! Welcome to the yearbook page. We are so glad you are here. Once you register, you can add, edit, delete, and favorite posts!
+          </div>
+        )}
+      </Transition>
+    </div>
+    <br />
 
     <div id='child'>
     <h3>Register</h3>
@@ -564,6 +598,7 @@ function App() {
       <input type='submit' value='Logout' />
     </form>
     </div>
+
 
     <CreatePost></CreatePost>
 

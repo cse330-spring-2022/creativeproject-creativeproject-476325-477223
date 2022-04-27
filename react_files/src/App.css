@@ -3,6 +3,8 @@
 }
 
 #parent {
+  background-color:rgb(210, 225, 238);
+  font-family: Impact,'Arial Narrow Bold', sans-serif;
   border: 1px solid black;
   margin: 1rem;
   padding: 2rem 2rem;
